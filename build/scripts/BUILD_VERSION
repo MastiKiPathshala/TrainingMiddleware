@@ -1,0 +1,18 @@
+#------------------------------------------------------------------------------
+# BUILD TEMPLETE FILE
+#------------------------------------------------------------------------------
+
+PRODUCT=zreyas-training
+BUILD_MAJOR=1
+BUILD_MINOR=0
+RELEASE=R0
+
+BUILD_PATCH=1
+BUILD_HOTFIX=""
+BUILD_SERVICEPACK=""
+
+#BUILD_CATEGORY="Internal"
+#BUILD_TYPE="Debug"
+#BUILD_HOW="Full"
+
+BUILD_TYPE="" 

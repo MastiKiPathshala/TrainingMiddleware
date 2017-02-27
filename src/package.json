@@ -1,0 +1,25 @@
+{
+  "name": "hubinitzreyas",
+  "version": "1.0.0",
+  "description": "hubinit for Zreyas Training",
+  "main": "hubinit.js",
+  "dependencies": {
+    "async": "^2.1.4",
+    "body-parser": "^1.16.0",
+    "exec": "^0.2.1",
+    "express": "^4.14.1",
+    "getmac": "^1.2.1",
+    "hostname": "0.0.3",
+    "http": "0.0.0",
+    "log": "^1.4.0",
+    "loglevel": "^1.4.1",
+    "os": "^0.1.1",
+    "wireless-tools": "^0.19.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Avijit Sarkar",
+  "license": "ISC"
+}

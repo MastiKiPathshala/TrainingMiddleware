@@ -1,0 +1,7 @@
+../../build/scripts/RELEASE_VERSION
+../../src/node_modules
+../../src/www
+../../src/SmartParking
+../../src/package.json
+../../src/zreyasTraining.js
+../../tools/
