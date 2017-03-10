@@ -54,7 +54,7 @@ def simulatedHardware():
 				# Checking if the parking time exceeded the present time or not
 				if (datetime.datetime.now().replace(second=0,microsecond=0) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
 					# if exceeds then send the car Exit message
-					payload = '{"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
+					payload = '{"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
 					print payload,"\n"
 					# -------- Mqtt publish part
 					(result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)                    
