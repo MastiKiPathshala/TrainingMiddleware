@@ -157,9 +157,9 @@ def distanceMeasurement():
                                 # Getting the Total parking Time in the slot(in minutes)
                                 if vehicleParkingTime[keys[i]] != None :
                                         vehicleParkedTime.update({keys[i]:int(math.ceil((vehicleLeavingTime - vehicleParkingTime[keys[i]]).seconds/60.0))})
-                                        vehicleParkingTime.update({keys[i]:None})
                                         payload = '{"parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"car_parkingtime":''\"'+str(vehicleParkingTime[keys[i]])+'\"'',"total_parkingtime":''\"'+str(vehicleParkedTime[keys[i]])+'\"''}'
-
+                                        vehicleParkingTime.update({keys[i]:None})
+                                        
                                         vehicleParkedTime.update({keys[i]:None})
                                         print payload
                                         (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
