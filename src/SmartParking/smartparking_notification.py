@@ -136,7 +136,7 @@ def distanceMeasurement():
                             sensors_output.update({keys[i]:1})
                             if vehicleParkingTime[keys[i]] == None:
                                     vehicleParkingTime.update({keys[i]:datetime.datetime.now()}) # Getting the time when vehicle parked in the slot $
-                                    payload = '{"parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"car_parkingtime":''\"'+str(vehicleParkingTime[keys[i]])+'\"''}'
+                                    payload = '{"Requester":"Device","parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"car_parkingtime":''\"'+str(vehicleParkingTime[keys[i]])+'\"''}'
                                     print payload
                                     (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
 
@@ -148,6 +148,8 @@ def distanceMeasurement():
 
                         elif sensor_distance[i] > FAULT:
                                 sensors_output.update({keys[i]:2})
+
+
                         else:
                                 sensors_output.update({keys[i]:0})
                                 # Getting the vehicle leaving the slot Time
@@ -155,9 +157,9 @@ def distanceMeasurement():
                                 # Getting the Total parking Time in the slot(in minutes)
                                 if vehicleParkingTime[keys[i]] != None :
                                         vehicleParkedTime.update({keys[i]:int(math.ceil((vehicleLeavingTime - vehicleParkingTime[keys[i]]).seconds/60.0))})
+                                        payload = '{"Requester":"Device","parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"car_parkingtime":''\"'+str(vehicleParkingTime[keys[i]])+'\"'',"total_parkingtime":''\"'+str(vehicleParkedTime[keys[i]])+'\"''}'
                                         vehicleParkingTime.update({keys[i]:None})
-                                        payload = '{"parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"total_parkingtime":''\"'+str(vehicleParkedTime[keys[i]])+'\"''}'
-
+                                        
                                         vehicleParkedTime.update({keys[i]:None})
                                         print payload
                                         (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
@@ -188,7 +190,7 @@ def distanceMeasurement():
                         # Checking if the parking time exceeded the present time or not
                         if (datetime.datetime.now().replace(second=0,microsecond=0) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
                             # if exceeds then send the car Exit message
-                            payload = '{"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
+                            payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
                             print payload,"\n"
                             # -------- Mqtt publish part
                             (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)                    
@@ -217,7 +219,7 @@ def distanceMeasurement():
                                 # Update the simulated slot data with the total parking time and car parking time, 
                                 simulated_slot_data.update({slotnum:{"random_totalparkingtime":random.randint(min_parktime,max_parktime),"car_parkingtime":datetime.datetime.now().replace(second=0,microsecond=0)}})
                                 # send the car arrival message 
-                                payload = '{"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"1","car_parkingtime":''\"'+str(simulated_slot_data[slotnum]["car_parkingtime"])+'\"''}'
+                                payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"1","car_parkingtime":''\"'+str(simulated_slot_data[slotnum]["car_parkingtime"])+'\"''}'
 
                                 print payload,"\n"
 

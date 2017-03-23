@@ -54,7 +54,7 @@ def simulatedHardware():
 				# Checking if the parking time exceeded the present time or not
 				if (datetime.datetime.now().replace(second=0,microsecond=0) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
 					# if exceeds then send the car Exit message
-					payload = '{"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
+					payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
 					print payload,"\n"
 					# -------- Mqtt publish part
 					(result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)                    
@@ -83,7 +83,7 @@ def simulatedHardware():
 						# Update the simulated slot data with the total parking time and car parking time, 
 						simulated_slot_data.update({slotnum:{"random_totalparkingtime":random.randint(min_parktime,max_parktime),"car_parkingtime":datetime.datetime.now().replace(second=0,microsecond=0)}})
 						# send the car arrival message 
-						payload = '{"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"1","car_parkingtime":''\"'+str(simulated_slot_data[slotnum]["car_parkingtime"])+'\"''}'
+						payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"1","car_parkingtime":''\"'+str(simulated_slot_data[slotnum]["car_parkingtime"])+'\"''}'
 
 						print payload,"\n"
 
