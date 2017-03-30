@@ -3,6 +3,7 @@ import time
 import datetime
 from datetime import timedelta
 import paho.mqtt.client as mqtt
+import pytz
 
 slot1 = 1
 slot2 = 2
@@ -52,7 +53,7 @@ def simulatedHardware():
 			if car_parkingtime != None and random_totalparkingtime != None :
 
 				# Checking if the parking time exceeded the present time or not
-				if (datetime.datetime.now().replace(second=0,microsecond=0) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
+				if (datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0,tzinfo=None) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
 					# if exceeds then send the car Exit message
 					payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
 					print payload,"\n"
@@ -75,13 +76,13 @@ def simulatedHardware():
 					
 					# process of randomization of the parking slot
 					randomslot_pickup = int(random.randint(1,100))
-					seconds_now = int(datetime.datetime.now().strftime("%S"))
+					seconds_now = int(datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0,tzinfo=None).strftime("%S"))
 					
 					#print randomslot_pickup,seconds_now,slotnum,"\n"
 
 					if randomslot_pickup < seconds_now : 
 						# Update the simulated slot data with the total parking time and car parking time, 
-						simulated_slot_data.update({slotnum:{"random_totalparkingtime":random.randint(min_parktime,max_parktime),"car_parkingtime":datetime.datetime.now().replace(second=0,microsecond=0)}})
+						simulated_slot_data.update({slotnum:{"random_totalparkingtime":random.randint(min_parktime,max_parktime),"car_parkingtime":datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0,tzinfo=None)}})
 						# send the car arrival message 
 						payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"1","car_parkingtime":''\"'+str(simulated_slot_data[slotnum]["car_parkingtime"])+'\"''}'
 

@@ -136,7 +136,7 @@ def distanceMeasurement():
                         if sensor_distance[i] < PARKED:
                             sensors_output.update({keys[i]:1})
                             if vehicleParkingTime[keys[i]] == None:
-                                    vehicleParkingTime.update({keys[i]:datetime.datetime.now(pytz.timezone('Asia/Kolkata'))}) # Getting the time when vehicle parked in the slot $
+                                    vehicleParkingTime.update({keys[i]:datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(tzinfo=None)}) # Getting the time when vehicle parked in the slot $
                                     payload = '{"Requester":"Device","parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"car_parkingtime":''\"'+str(vehicleParkingTime[keys[i]])+'\"''}'
                                     print payload
                                     (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
@@ -154,7 +154,7 @@ def distanceMeasurement():
                         else:
                                 sensors_output.update({keys[i]:0})
                                 # Getting the vehicle leaving the slot Time
-                                vehicleLeavingTime = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+                                vehicleLeavingTime = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(tzinfo=None)
                                 # Getting the Total parking Time in the slot(in minutes)
                                 if vehicleParkingTime[keys[i]] != None :
                                         vehicleParkedTime.update({keys[i]:int(math.ceil((vehicleLeavingTime - vehicleParkingTime[keys[i]]).seconds/60.0))})
@@ -189,7 +189,7 @@ def distanceMeasurement():
                     if car_parkingtime != None and random_totalparkingtime != None :
 
                         # Checking if the parking time exceeded the present time or not
-                        if (datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
+                        if (datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0,tzinfo=None) >=  car_parkingtime+timedelta(minutes=random_totalparkingtime)):      
                             # if exceeds then send the car Exit message
                             payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
                             print payload,"\n"
@@ -218,7 +218,7 @@ def distanceMeasurement():
 
                             if randomslot_pickup < seconds_now : 
                                 # Update the simulated slot data with the total parking time and car parking time, 
-                                simulated_slot_data.update({slotnum:{"random_totalparkingtime":random.randint(min_parktime,max_parktime),"car_parkingtime":datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0)}})
+                                simulated_slot_data.update({slotnum:{"random_totalparkingtime":random.randint(min_parktime,max_parktime),"car_parkingtime":datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0,tzinfo=None)}})
                                 # send the car arrival message 
                                 payload = '{"Requester":"Device","parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"1","car_parkingtime":''\"'+str(simulated_slot_data[slotnum]["car_parkingtime"])+'\"''}'
 
