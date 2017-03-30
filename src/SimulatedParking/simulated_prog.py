@@ -76,7 +76,7 @@ def simulatedHardware():
 					
 					# process of randomization of the parking slot
 					randomslot_pickup = int(random.randint(1,100))
-					seconds_now = int(datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(second=0,microsecond=0,tzinfo=None).strftime("%S"))
+					seconds_now = int(datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(tzinfo=None).strftime("%S"))
 					
 					#print randomslot_pickup,seconds_now,slotnum,"\n"
 
