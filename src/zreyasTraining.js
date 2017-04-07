@@ -9,6 +9,7 @@ var hostapd = require('wireless-tools/hostapd');
 var iwconfig = require('wireless-tools/iwconfig')
 var hostname = os.hostname();
 var ifconfig = require('wireless-tools/ifconfig');
+var redis = require('redis');
 
 //Lets define a port we want to listen to
 const AP_SERVICE_PORT = 80;
@@ -17,7 +18,7 @@ const AP_SERVICE_PORT = 80;
 var id;
 var liveUrl;
 var svrId;
-
+redisClient = redis.createClient();
 //Overwriting plugin to allow timestamp to be appended
 
 var originalFactory = log.methodFactory;
@@ -34,14 +35,21 @@ log.methodFactory = function(methodName, logLevel, loggerName) {
 //Setting up our log level: select "trace" / "debug" / "warn" / "info" / "error"
 log.setLevel('debug');
 
+
+
 require('getmac').getMac(function(err, macAddress) {
-    if (err) { id = "zreyas_" + myuuid } else { id = "zreyas_" + macAddress }
+    if (err) {
+        id = "zreyas_" + myuuid;
+    } else {
+        id = "zreyas_" + macAddress;
+    }
+    redisClient.hmset("SystemDetails", 'parkingLotId', id);
+    redisClient.hmset("CloudDetails", 'mqttIpAddr', "128.199.173.29");
+    redisClient.hmset("CloudDetails", 'mqttPort', "1883");
 })
 
-log.info(' zreyas-training service: start');
+log.info('IoT-training service: start');
 
-
-//...................
 var isStatic = false;
 
 var bodyParser = require('body-parser')
