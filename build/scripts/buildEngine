@@ -1,5 +1,20 @@
 #! /usr/bin/perl
 
+#########################################################################
+#
+# $file: buildEngine
+#
+# @brief: Build Engine to generate distributable package
+#
+# @author: Prosenjit Pal
+#
+# @date: 26 May 2017 Initial Check in
+#
+# This file is subject to the terms and conditions defined in
+# file 'LICENSE.txt', which is part of this source code package.
+#
+########################################################################
+
 use strict;
 use warnings;
 use POSIX qw(strftime);
@@ -53,13 +68,11 @@ $ENV{'CXX'} = "arm-linux-gnueabihf-g++";
 $ENV{'AR'} = "arm-linux-gnueabihf-ar";
 $ENV{'RANLIB'} = "arm-linux-gnueabihf-ranlib";
 $ENV{'LD'} = "arm-linux-gnueabihf-ld";
-#print "GIT ROOT : $gitRoot, Installation dir : $ENV{'PREFIX'}\n";
-print "GIT ROOT : $ENV{'gitRoot'}\n";
+print "GIT ROOT : $gitRoot, Installation dir : $ENV{'PREFIX'}\n";
 
 my $versionTable =  {};
 
 my $versionFile = "$gitRoot/build/scripts/BUILD_VERSION";
-print "Version file is $versionFile\n";
 open(FH, "$versionFile") or die "Can not open file BUILD_VERSION $!\n";
 my @versionFile = <FH>;
 close(FH);
@@ -85,7 +98,7 @@ foreach my $elem (@versionFile) {
 &printError("BUILD_SERVICEPACK") unless(defined $versionTable->{BUILD_SERVICEPACK});
 my $verString = &constructBuildString(\%${versionTable});
 &writeReleaseVerToFile("$verString", "$gitRoot");
-&buildIotMiddleware("$verString", "$gitRoot");
+&buildSecurIoTTrainingGateway("$verString", "$gitRoot");
 
 sub printError {
     my $product = shift;
@@ -96,13 +109,21 @@ sub printError {
 sub constructBuildString {
     my ($custVerHash) = @_;
     my $datestring = strftime "%m%d%Y%H%M%S", localtime;;
-    my $versionString = $custVerHash->{PRODUCT} . "\-" .
-    $custVerHash->{BUILD_MAJOR} . "\." .
-    $custVerHash->{BUILD_MINOR} . "\-" .
-    $custVerHash->{RELEASE} . "." .
-    #$datestring;
-    $custVerHash->{BUILD_PATCH};
-    return "$versionString";
+    if ($custVerHash->{RELEASE} eq "CI") {
+        my $versionString = $custVerHash->{PRODUCT} . "\-" .
+        $custVerHash->{BUILD_MAJOR} . "\." .
+        $custVerHash->{BUILD_MINOR} . "\-" .
+        $custVerHash->{RELEASE} . "." .
+        $datestring;
+        return "$versionString";
+    } else {
+        my $versionString = $custVerHash->{PRODUCT} . "\-" .
+        $custVerHash->{BUILD_MAJOR} . "\." .
+        $custVerHash->{BUILD_MINOR} . "\-" .
+        $custVerHash->{RELEASE} . "." .
+        $custVerHash->{BUILD_PATCH};
+        return "$versionString";
+    }
 }
 
 sub writeReleaseVerToFile {
@@ -111,51 +132,24 @@ sub writeReleaseVerToFile {
     chomp($gitRoot);
     my $relFile = "RELEASE_VERSION";
     unlink ($relFile) if(-e "$relFile");
-    print "Updating release information onto a file $relFile\n";
     chdir(qq($gitRoot/build/scripts));
     open(my $fh, '>', $relFile) or die "Could not open file $relFile $!.\n";
     print $fh "{\"system_sw_version\":\"$versionString\"}\n";
+    print "Build version $versionString written onto file $relFile\n";
     close $fh;
     chmod 0755, $relFile or die "Couldn't change the permission to $relFile: $!";
 }
 
-sub buildIotMiddleware {
+sub buildSecurIoTTrainingGateway {
      my $versionString = shift;
      my $gitRoot = shift;
      chomp($gitRoot);
      my $packageName = "$versionString\.tar\.gz";
-     my $relPackageName = "$packageName";
-     #system("mkdir );
-     #if ($?/256) {
-     #    print "Build Error\n";
-     #    #exit(1);
-     #}
-     #print "Handling thirdparty Modules\n";
-     #print "Changing directory to $gitRoot/thirdparty\n";
-     #chdir(qq($gitRoot/thirdparty));
-     #system("make");
-     print "Handling Zreyas Modules\n"; 
-     print "Changing directory to $gitRoot/src\n";
-     chdir(qq($gitRoot/src));
-     system("mkdir -p $gitRoot/src/lib");
-     #print "Handling Node Modules\n";
-     #print "Handling C Libraries\n";
-     #chdir(qq($gitRoot/src/zreyas_lib));
-     #system("make; make install");
-     #print "Handling C Modules\n";
-     #chdir(qq($gitRoot/src/gpio));
-     #system("make; make install");
-     #chdir(qq($gitRoot/src/services));
-     #system("make; make install");
-     #chdir(qq($gitRoot/src/plc));
-     #system("make; make install");
+     my $relPackageName = "v$packageName";
+     chdir(qq($gitRoot));
      print "Changing directory to $gitRoot/build/scripts\n";
      chdir(qq($gitRoot/build/scripts));
-     print "Executing tar command /bin/tar -czf $gitRoot/build/pkg/$packageName --files-from filesForTarball\n";
-     system("/bin/tar -czf $gitRoot/build/pkg/$packageName --files-from filesForTarball") ; 
-     #print "Signing Zreyas package with Zreyas Gateway Private key";
-     chdir(qq($gitRoot/build/pkg));
-     #system("sudo mv $gitRoot/build/pkg/$packageName $gitRoot/build/pkg/$relPackageName; sudo openssl dgst -sha256 -sign /etc/ssl/certs/Zreyas_Gateway_Private.pem -out /tmp/$relPackageName.sha256 $gitRoot/build/pkg/$relPackageName; sudo openssl base64 -in /tmp/$relPackageName.sha256 -out $gitRoot/build/pkg/$relPackageName.digest; /bin/tar -cvzf $gitRoot/build/pkg/$relPackageName.signed $relPackageName*; sudo rm -f /tmp/$relPackageName.sha256");
-     system("sudo mv $gitRoot/build/pkg/$packageName $gitRoot/build/pkg/$relPackageName; /bin/tar -cvzf $gitRoot/build/pkg/$relPackageName $relPackageName*");
+     print "Executing tar command /bin/tar -czf $gitRoot/build/pkg/$packageName --files-from pkgList\n";
+     system("/bin/tar -czf $gitRoot/build/pkg/$packageName --files-from pkgList") ; 
 }
 

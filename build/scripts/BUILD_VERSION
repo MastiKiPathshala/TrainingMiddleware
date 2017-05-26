@@ -2,7 +2,7 @@
 # BUILD TEMPLETE FILE
 #------------------------------------------------------------------------------
 
-PRODUCT=zreyas-training
+PRODUCT=securiot-training
 BUILD_MAJOR=1
 BUILD_MINOR=0
 RELEASE=R0

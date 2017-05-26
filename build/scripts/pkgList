@@ -1,0 +1,9 @@
+../../build/scripts/RELEASE_VERSION
+../../LICENSE.txt
+../../README.md
+../../src/node_modules
+../../src/package.json
+../../src/securiot_training.js
+../../src/SmartParking
+../../src/www
+../../tools
