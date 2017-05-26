@@ -1,4 +1,4 @@
-../../build/scripts/RELEASE_VERSION
+../../build/pkg/RELEASE_VERSION
 ../../LICENSE.txt
 ../../README.md
 ../../src/node_modules

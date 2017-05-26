@@ -62,13 +62,6 @@ if (defined($build_how)) {
 my $gitRoot  = `pwd`;
 chomp($gitRoot);
 $ENV{'gitRoot'} = $gitRoot;
-$ENV{'PREFIX'} = "$gitRoot/thirdparty";
-$ENV{'CC'} = "arm-linux-gnueabihf-gcc";
-$ENV{'CXX'} = "arm-linux-gnueabihf-g++";
-$ENV{'AR'} = "arm-linux-gnueabihf-ar";
-$ENV{'RANLIB'} = "arm-linux-gnueabihf-ranlib";
-$ENV{'LD'} = "arm-linux-gnueabihf-ld";
-print "GIT ROOT : $gitRoot, Installation dir : $ENV{'PREFIX'}\n";
 
 my $versionTable =  {};
 
@@ -130,7 +123,7 @@ sub writeReleaseVerToFile {
     my $versionString = shift;
     my $gitRoot = shift;
     chomp($gitRoot);
-    my $relFile = "RELEASE_VERSION";
+    my $relFile = "../pkg/RELEASE_VERSION";
     unlink ($relFile) if(-e "$relFile");
     chdir(qq($gitRoot/build/scripts));
     open(my $fh, '>', $relFile) or die "Could not open file $relFile $!.\n";
