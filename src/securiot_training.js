@@ -39,9 +39,9 @@ log.setLevel('debug');
 
 require('getmac').getMac(function(err, macAddress) {
     if (err) {
-        id = "zreyas_" + myuuid;
+        id = "SecurIoT_" + myuuid;
     } else {
-        id = "zreyas_" + macAddress;
+        id = "SecurIoT_" + macAddress;
     }
     redisClient.hmset("SystemDetails", 'parkingLotId', id);
     redisClient.hmset("CloudDetails", 'mqttIpAddr', "128.199.173.29");
@@ -59,7 +59,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use('/', express.static(__dirname + '/www'));
 app.get('/',express.static('www'))
-app.post('/', function(req, res) {
+app.post('/api/system/v1.0', function(req, res) {
 
     var body = req.body;
    
@@ -407,7 +407,7 @@ function scanNetworks(iface, cb) {
             log.warn(' network scan error: ' + err);
             cb(true, []);
         } else {
-            log.debug(' networks scanned: ' + networks);
+            log.debug(' networks scanned: ' + JSON.stringify(networks));
             cb(false, networks);
         }
 
