@@ -48,7 +48,7 @@ require('getmac').getMac(function(err, macAddress) {
     redisClient.hmset("CloudDetails", 'mqttPort', "1883");
 })
 
-log.info('IoT-training service: start');
+log.info('SecurIoT Training Service: start');
 
 var isStatic = false;
 
@@ -63,7 +63,7 @@ app.post('/api/system/v1.0', function(req, res) {
 
     var body = req.body;
    
-    console.log(req.body)
+    log.debug(req.body)
 
     switch (body.action) {
 
@@ -135,7 +135,7 @@ app.post('/api/system/v1.0', function(req, res) {
             break;
 
         case "STATIC":
-            log.debug(" received l3 network request");
+            log.debug(" received L3 network request");
 
             var data = body.data;
             var iface = body.iface;
@@ -164,7 +164,7 @@ app.post('/api/system/v1.0', function(req, res) {
         case "ADD":
 
             
-	    log.debug(" received l2 network request");
+	    log.debug(" received L2 network request");
 	    
             var data = body.data;
             var iface = body.iface;
@@ -207,7 +207,7 @@ app.post('/api/system/v1.0', function(req, res) {
 });
 
 app.listen(AP_SERVICE_PORT);
-console.log('Listening on port '+AP_SERVICE_PORT);
+log.info('Listening on port '+AP_SERVICE_PORT);
 
 var addStatic = function(iface, data, cb) {
     clearInterfaces(iface, 'static', function(err) {
@@ -287,12 +287,15 @@ function addNetwork(iface, data, cb) {
 function wifiEnable(iface, data, cb) {
     // Loop and add each network entry
     for (var i in data) {
-	
-        addnetworkid(iface, data[i].rasp_ssid_, data[i].wifiPass);
-	
-    }
 
-    setTimeout(cb(false), 5000);
+        addnetworkid(iface, data[i].rasp_ssid_, data[i].wifiPass);
+
+    }
+    setTimeout(function (){wifiTimeoutHandler (cb)}, 5000);
+}
+
+var wifiTimeoutHandler = function (cb) {
+    cb (false);
 }
 
 function clearNetworks(iface, cb) {
