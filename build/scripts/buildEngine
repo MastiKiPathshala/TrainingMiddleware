@@ -123,6 +123,7 @@ sub writeReleaseVerToFile {
     my $versionString = shift;
     my $gitRoot = shift;
     chomp($gitRoot);
+    system("mkdir -p $gitRoot/build/pkg");
     my $relFile = "../pkg/RELEASE_VERSION";
     unlink ($relFile) if(-e "$relFile");
     chdir(qq($gitRoot/build/scripts));

@@ -1,3 +1,17 @@
+/*************************************************************************
+ *
+ * $file: <file name>
+ *
+ * @brief: <brief description of file>
+ *
+ * @author: <Author name and email>
+ *
+ * @date: <date with change log in reverse chronological order>
+ *
+ * This file is subject to the terms and conditions defined in
+ * file 'LICENSE.txt', which is part of this source code package.
+ *
+ ************************************************************************/
 var os = require("os");
 var log = require('loglevel');
 var exec = require('child_process').exec;
