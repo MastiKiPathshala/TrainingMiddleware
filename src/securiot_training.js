@@ -57,7 +57,7 @@ require('getmac').getMac(function(err, macAddress) {
     } else {
         id = "SecurIoT_" + macAddress;
     }
-    redisClient.hmset("SystemDetails", 'parkingLotId', id);
+    redisClient.hmset("SystemDetails", 'gatewayId', id);
     redisClient.hmset("CloudDetails", 'mqttIpAddr', "128.199.173.29");
     redisClient.hmset("CloudDetails", 'mqttPort', "1883");
 })
@@ -77,7 +77,7 @@ app.post('/api/system/v1.0', function(req, res) {
 
     var body = req.body;
    
-    log.debug(req.body)
+    log.debug(JSON.stringify (req.body))
 
     switch (body.action) {
 
@@ -209,15 +209,21 @@ app.post('/api/system/v1.0', function(req, res) {
             res.end('{"status":true}');
             break;
 
+		case "PARKING":
+			log.debug ('received PARKING request');
+			redisClient.hmset("SystemDetails", 'parkingLotId', body.lotId);
+			redisClient.hmset("SystemDetails", 'parkingSlotStartId', body.slotStartId);
+			redisClient.hmset("SystemDetails", 'parkingSlotNum', body.slotNum);
+			res.writeHead(200);
+			res.end('{"status":true}');
+			break;
+
         default:
             log.warn(' received unknown request');
             res.writeHead(200);
             res.end('{"status":true}');
             break;
     }
-
-
-
 });
 
 app.listen(AP_SERVICE_PORT);

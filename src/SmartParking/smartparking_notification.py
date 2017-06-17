@@ -11,26 +11,28 @@ from multiprocessing import Process
 import math
 import pytz
 
-# slot selection
-slot1 = 1
-slot2 = 2
-slot3 = 3
-
 redisClient = redis.Redis('localhost')
 
 parkingLotId = redisClient.hget('SystemDetails', 'parkingLotId')
+parkingSlotStartId = redisClient.hget('SystemDetails', 'parkingSlotStartId')
+parkingSlotNum = redisClient.hget('SystemDetails', 'parkingSlotNum')
 mqttIp = redisClient.hget('CloudDetails', 'mqttIpAddr')
 mqttPort = redisClient.hget('CloudDetails', 'mqttPort')
+
+# slot selection
+slot1 = int(parkingSlotStartId)
+slot2 = int(parkingSlotStartId) + 1
+slot3 = int(parkingSlotStartId) + 2;
 
 vehicleParkingTime = {slot1:None,slot2:None,slot3:None} # Dictionary to store the Time when vehicle parked in the slot
 vehicleParkedTime = {slot1:None,slot2:None,slot3:None} # Dictionary to store the Total parking time of the vehicle in the slot
 
-slotlimit = 51
+slotlimit = int(parkingSlotNum) + slot1
 
 simulated_slot_data = {}
 slots = []
 
-for i in range(1,slotlimit):
+for i in range(slot1,slotlimit):
     slots.append(i)
     simulated_slot_data.update({i:{"random_totalparkingtime":None,"car_parkingtime":None}})
 
@@ -145,7 +147,7 @@ def distanceMeasurement():
                                     vehicleParkingTime.update({keys[i]:datetime.datetime.now(pytz.timezone('Asia/Kolkata')).replace(tzinfo=None)}) # Getting the time when vehicle parked in the slot $
                                     payload = '{"Requester":"Device","parking_lot_id":''\"'+parkingLotId+'\"'',"parking_id":''\"'+str(keys[i])+'\"'',"parking_status":''\"'+str(sensors_output[keys[i]])+'\"'',"car_parkingtime":''\"'+str(vehicleParkingTime[keys[i]])+'\"''}'
                                     print payload
-                                    (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
+                                    (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,1)
 
                                     if result == 0:
                                             print "Message to APP successfully sent"
@@ -169,7 +171,7 @@ def distanceMeasurement():
                                         
                                         vehicleParkedTime.update({keys[i]:None})
                                         print payload
-                                        (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
+                                        (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,1)
                                         if result == 0:
                                             print "Message to APP successfully sent"
                                         else:
@@ -200,7 +202,7 @@ def distanceMeasurement():
                             payload = '{"Requester":"Device","parking_lot_id":''\"'+parkingLotId+'\"'',"parking_id":''\"'+str(slotnum)+'\"'',"parking_status":"0","car_parkingtime":''\"'+str(car_parkingtime)+'\"'',"total_parkingtime":''\"'+str(random_totalparkingtime)+'\"''}'
                             print payload,"\n"
                             # -------- Mqtt publish part
-                            (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)                    
+                            (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,1)                    
 
                             if result == 0:
                                 print "Message to APP successfully sent"
@@ -231,7 +233,7 @@ def distanceMeasurement():
                                 print payload,"\n"
 
                                 # ------- Mqtt publish part 
-                                (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,2)
+                                (result,mid) = mqttc.publish(PUBLISH_CHANNEL,payload,1)
 
                                 if result == 0:
                                     print "Message to APP successfully sent"

@@ -115,21 +115,21 @@
         //lets get the current ip
 
         $.ajax({
-
-
+            url: '/api/system/v1.0',
             data: JSON.stringify({
-                action: "CURRENT"
+                action: "STATUS"
             }),
             method: "POST"
         }).done(function(res) {
 
-            $("#ipList").text(res)
-
+            console.log(res)
+            res = JSON.parse(res)
+			$("#ipList").text(JSON.stringify(res.interfaces))
         })
-
 
         $.ajax({
 
+            url: '/api/system/v1.0',
             data: JSON.stringify({
                 action: "CPU"
             }),
@@ -141,6 +141,21 @@
             $("#cpuLoad").text(res.load)
             $("#uptimeVal").text(res.uptime)
             $("#freemem").text(res.freemem)
+
+        })
+
+        $.ajax({
+            url: '/api/system/v1.0',
+            data: JSON.stringify({
+                action: "PARKING",
+				lotId: "RimJhim",
+				slotStartId: 16,
+				slotNum: 15
+            }),
+            method: "POST"
+        }).done(function(res) {
+
+            console.log(res)
 
         })
 
