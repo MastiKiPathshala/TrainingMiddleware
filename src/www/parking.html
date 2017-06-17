@@ -31,17 +31,35 @@
         <div class="header clearfix">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation" class="active">
-                        <button type="button" class="btn btn-primary" onclick="window.location.href = 'parking.html'">Parking System</button>
-                    </li>
                 </ul>
                 <img src="images/mkp_logo.jpg">
             </nav>
-            <h3 class="text-muted">SecurIoT Training Gateway</h3>
         </div>
+<div class="row">
+                      <div class="col-lg-12">
+                         <div class="panel panel-default">
+                            <div class="panel-heading">
+                               <h3 class="panel-title">Settings</h3><span id="versionId"></span>
+                            </div>
+                            <div class="panel-body">
+                               <div class="form-group">
+                                  Parking Lot Id
+                                  <input type="text" id='setParkingLotId' size='16' maxlength="16">
+                               </div>
+                               <div class="form-group">
+                                  Parking Slot Start Id
+                                  <input type="text" id='setParkingSlotStartId' size='32'>
+                               </div>
+                               <div class="form-group">
+                                  Parking Slot Num
+                                  <input type="text" id='setParkingSlotNum' size='32'>
+                               </div>
+                               <button class='btn btn-info waves-effect waves-light' onclick='setParkingSystem()'>Set Parking System</button>
+
         <div class="panel panel-primary">
+            <h3 class="text-muted">SecurIoT Training SmartParking status</h3>
             <!-- Default panel contents -->
-            <div class="panel-heading" style="font-size: 20px">System</div>
+            <div class="panel-heading" style="font-size: 20px">Parking Lot</div>
             <!-- Table -->
             <div class="table-responsive">
                 <table class="table">
@@ -53,47 +71,21 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>CPU Load</td>
-                            <td id="cpuLoad">1000</td>
+                            <td>Parking Lot ID</td>
+                            <td id="parkingLotId"></td>
                         </tr>
                         <tr>
-                            <td>UP Time</td>
-                            <td id="uptimeVal"></td>
+                            <td>Starting slot ID</td>
+                            <td id="parkingSlotStartId"></td>
                         </tr>
                         <tr>
-                            <td>Free Mem</td>
-                            <td id="freemem"></td>
+                            <td>Parking slot number</td>
+                            <td id="parkingSlotNum"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="panel panel-primary">
-            <!-- Default panel contents -->
-            <div class="panel-heading" style="font-size: 20px">Network</div>
-            <!-- Table -->
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Current IP</td>
-                            <td id="ipList"></td>
-                        </tr>
-                        <!--<tr>
-                            <td>Wifi</td>
-                            <td>2000</td>
-                        </tr> -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <br>
         <br>
         <br>
         <br>
@@ -105,44 +97,15 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="js/parking.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-
+	
         $.ajaxSetup({
             contentType: 'application/json'
         })
 
-        //lets get the current ip
-
-        $.ajax({
-            url: '/api/system/v1.0',
-            data: JSON.stringify({
-                action: "STATUS"
-            }),
-            method: "POST"
-        }).done(function(res) {
-
-            console.log(res)
-            res = JSON.parse(res)
-			$("#ipList").text(JSON.stringify(res.interfaces))
-        })
-
-        $.ajax({
-
-            url: '/api/system/v1.0',
-            data: JSON.stringify({
-                action: "CPU"
-            }),
-            method: "POST"
-        }).done(function(res) {
-
-            console.log(res)
-            res = JSON.parse(res)
-            $("#cpuLoad").text(res.load)
-            $("#uptimeVal").text(res.uptime)
-            $("#freemem").text(res.freemem)
-
-        })
+		getParkingStatus ();
     })
     </script>
 </body>

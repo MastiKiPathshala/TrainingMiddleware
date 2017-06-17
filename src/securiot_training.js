@@ -73,6 +73,30 @@ var app = express();
 app.use(bodyParser.json());
 app.use('/', express.static(__dirname + '/www'));
 app.get('/',express.static('www'))
+
+app.get('/api/system/v1.0/parking', function(req, res) {
+
+	var parkingLotDetails = {};
+	log.debug ('GET parking req : ');
+	redisClient.hgetall("SystemDetails", function (err, reply) {
+		if (!err && reply) {
+			parkingLotDetails.status = true;
+			parkingLotDetails.lotId = reply.parkingLotId;
+			parkingLotDetails.slotStartId = reply.parkingSlotStartId;
+			parkingLotDetails.slotNum = reply.parkingSlotNum;
+			log.debug ("GET parking res : " + JSON.stringify(parkingLotDetails));
+			res.writeHead(200);
+			res.end(JSON.stringify(parkingLotDetails));
+		} else {
+			parkingLotDetails.status = false;
+			parkingLotDetails.errMsg = "Parking Lot not configured";
+			log.debug ("GET parking res : " + JSON.stringify(parkingLotDetails));
+			res.writeHead(200);
+			res.end(JSON.stringify(parkingLotDetails));
+		}
+	});
+});
+
 app.post('/api/system/v1.0', function(req, res) {
 
     var body = req.body;
