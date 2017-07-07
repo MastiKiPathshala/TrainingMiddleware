@@ -61,25 +61,31 @@ setTimeout(function(){
 	upper_amb = 38;
 	lower_obj = 17;
 	upper_obj = 37;
-	callTimer()
+	
+	var sensorTagArr = [];
+	sensorTagArr = ["24:6D:83:9E","B8:4F:6G:4D"];
+	
+	for(var i in sensorTagArr){
+		callTimer(sensorTagArr[i])
+	}
 		
 }, 2000);
 	
-var callTimer = function() {
+var callTimer = function(sensorTagArr) {
 	
 	setInterval(function(){
-		generateRandomNumber()
+		generateRandomNumber(sensorTagArr)
 	}, 2000);
 	
 }	
 
-var generateRandomNumber = function() {
+var generateRandomNumber = function(sensorTagArr) {
 	
 	var acx = random.real(lower_ac, upper_ac, true);
 	var acy = random.real(lower_ac, upper_ac, true);
 	var acz = random.real(lower_ac, upper_ac, true);
 	var ac = acx+","+acy+","+acz;
-	var finalDataAc = ac+"-"+"24:6f:83"+"-"+"accelerometer"+"-"+"G";
+	var finalDataAc = ac+"-"+sensorTagArr+"-"+"accelerometer"+"-"+"G";
 	
 	localClient.publish('topic/sensor/data/accelerometer', finalDataAc.toString());
 	
@@ -87,7 +93,7 @@ var generateRandomNumber = function() {
 	var mgy = random.real(lower_ac, upper_mg, true);
 	var mgz = random.real(lower_mg, upper_mg, true);
 	var mg = mgx+","+mgy+","+mgz;
-	var finalDataMg = mg+"-"+"24:6f:83"+"-"+"magnetometer"+"-"+"G";
+	var finalDataMg = mg+"-"+sensorTagArr+"-"+"magnetometer"+"-"+"G";
 	
 	localClient.publish('topic/sensor/data/magnetometer', finalDataMg.toString());
 	
@@ -95,17 +101,17 @@ var generateRandomNumber = function() {
 	var gyy = random.real(lower_gy, upper_gy, true);
 	var gyz = random.real(lower_gy, upper_gy, true);
 	var gy = gyx+","+gyy+","+gyz;
-	var finalDataGy = gy+"-"+"24:6f:83"+"-"+"gyroscope"+"-"+"G";
+	var finalDataGy = gy+"-"+sensorTagArr+"-"+"gyroscope"+"-"+"G";
 	
 	localClient.publish('topic/sensor/data/gyroscope', finalDataGy.toString());
 	
 	var amb = random.real(lower_amb, upper_amb, true);
-	var finalDataAmb = amb+"-"+"24:6f:83"+"-"+"ambientTemperature"+"-"+"C";
+	var finalDataAmb = amb+"-"+sensorTagArr+"-"+"ambientTemperature"+"-"+"C";
 	
 	localClient.publish('topic/sensor/data/ambientTemperature', finalDataAmb.toString());
 	
 	var obj = random.real(lower_obj, upper_obj, true);
-	var finalDataObj = obj+"-"+"24:6f:83"+"-"+"objectTemperature"+"-"+"C";
+	var finalDataObj = obj+"-"+sensorTagArr+"-"+"objectTemperature"+"-"+"C";
 	
 	localClient.publish('topic/sensor/data/objectTemperature', finalDataObj.toString());
 	
@@ -115,4 +121,3 @@ var generateRandomNumber = function() {
 	console.log(finalDataMg);
 	console.log(finalDataAc);
 }
-
