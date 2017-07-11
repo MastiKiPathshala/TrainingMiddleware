@@ -149,11 +149,11 @@ var generateRandomNumber = function(sensorTagArr) {
 	
 	var temp = random.real(lower_temp, upper_temp, true);
 	var finalDataTemp = temp+"-"+sensorTagArr+"-"+"temperature"+"-"+"C";
-	localClient.publish('topic/sensor/data/temperature', finalDataTemp.toString());
+	localClient.publish('topic/sensor/data/ambientTemperature', finalDataTemp.toString());
 	
 	var humid = random.real(lower_humid, upper_humid, true);
 	var finalDataHumid = humid+"-"+sensorTagArr+"-"+"humidity"+"-"+"%rh";
-	localClient.publish('topic/sensor/data/objectTemperature', finalDataHumid.toString());
+	localClient.publish('topic/sensor/data/humidity', finalDataHumid.toString());
 	
 	console.log(finalDataSo2);
 	console.log(finalDataNo2);
